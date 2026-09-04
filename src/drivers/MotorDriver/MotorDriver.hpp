@@ -22,9 +22,9 @@ public:
   int32_t getPulse();
 
 private:
-  u_int8_t directionPin_stored; // guarda o pino da direcao
-  u_int8_t pwmPin_stored;       // guarda o pino do PWM
-  u_int8_t pulse_stored;        // guarda valor atual do PWM
+  uint8_t directionPin_stored; // guarda o pino da direcao
+  uint8_t pwmPin_stored;       // guarda o pino do PWM
+  uint8_t pulse_stored;        // guarda valor atual do PWM
 };
 
 #endif // MOTOR_DRIVER_HPP

@@ -11,8 +11,8 @@
 
 // __________________________________________________________________
 
-MotorDriver motorLeft(GPIO_DIRECTION_A, GPIO_PWM_A);
-MotorDriver motorRight(GPIO_DIRECTION_B, GPIO_PWM_B);
+MotorDriver motorLeft(GPIO_DIRECTION_A, GPIO_PWM_A, PWM_CHANNEL_MOTOR_A);
+MotorDriver motorRight(GPIO_DIRECTION_B, GPIO_PWM_B, PWM_CHANNEL_MOTOR_B);
 Multiplexer multiplexer;
 
 // armazena leitura dos sensores

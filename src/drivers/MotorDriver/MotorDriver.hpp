@@ -11,8 +11,7 @@
 
 class MotorDriver {
 public:
-  MotorDriver(uint8_t directionPin, uint8_t pwmPin);
-
+  MotorDriver(uint8_t directionPin, uint8_t pwmPin, uint8_t pwmChannel);
 
   // Controla a velocidade dos motores (em %)
   // sinal + frente
@@ -25,6 +24,7 @@ private:
   uint8_t directionPin_stored; // guarda o pino da direcao
   uint8_t pwmPin_stored;       // guarda o pino do PWM
   uint8_t pulse_stored;        // guarda valor atual do PWM
+  uint8_t pwm_channel;
 };
 
 #endif // MOTOR_DRIVER_HPP

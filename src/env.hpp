@@ -11,6 +11,9 @@
 
 #define BASE_MOTOR_SPEED (2000) // velocidade base dos motores (0 - 8191)
 
+#define PWM_CHANNEL_MOTOR_A (0)
+#define PWM_CHANNEL_MOTOR_B (1)
+
 // MOTOR ESQUERDO
 #define GPIO_DIRECTION_A (9) // pino direção
 #define GPIO_PWM_A       (3) // pino pwm

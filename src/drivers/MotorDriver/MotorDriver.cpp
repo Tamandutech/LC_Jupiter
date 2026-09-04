@@ -3,13 +3,16 @@
 
 #include "env.hpp"
 
-MotorDriver::MotorDriver(uint8_t directionPin, uint8_t pwmPin) {
+MotorDriver::MotorDriver(uint8_t directionPin, uint8_t pwmPin,
+                         uint8_t pwmChannel) {
   directionPin_stored = directionPin;
   pwmPin_stored       = pwmPin;
+  pwm_channel         = pwmChannel;
 
   pinMode(directionPin_stored, OUTPUT);
 
-  ledcAttach(pwmPin_stored, MOTOR_PWM_FREQUENCY, PWM_RESOLUTION);
+  ledcSetup(pwm_channel, MOTOR_PWM_FREQUENCY, PWM_RESOLUTION);
+  ledcAttachPin(pwmPin_stored, pwm_channel);
 }
 
 void MotorDriver::pwmOutput(int32_t value) {

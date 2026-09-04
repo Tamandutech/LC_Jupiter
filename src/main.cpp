@@ -5,37 +5,32 @@
 #include "env.hpp"
 
 // Drivers
+#include "LineControl/LineControl.hpp"
 #include "drivers/MotorDriver/MotorDriver.hpp"
+#include "drivers/Multiplexer/Multiplexer.hpp"
 
-/*
-struct motorPins 
-{
-    uint8_t DIRECTION;
-    uint8_t PWM;
-}
+// __________________________________________________________________
 
-motorPins pinLeft = 
-{
-    GPIO_DIRECTION_A;
-    GPIO_PWM_A;
-}
-
-*/
-
-MotorDriver motorLeft(GPIO_DIRECTION_A, GPIO_PWM_A );
+MotorDriver motorLeft(GPIO_DIRECTION_A, GPIO_PWM_A);
 MotorDriver motorRight(GPIO_DIRECTION_B, GPIO_PWM_B);
+Multiplexer multiplexer;
 
-// MotorDriver motorSuccao()
+// armazena leitura dos sensores
+int sensorReadings[NUM_SENSORS];
 
-void motorSpeed()
-{
-    motorLeft.pwmOutput(20);
-    motorRight.pwmOutput(20);
+// __________________________________________________________________
 
+void setup() { Serial.begin(115200); }
+
+
+void loop() {
+  delay(1000);
+
+  multiplexer.readSensors(sensorReadings);           // le todos os 12 sensores;
+
+  float PDcorrection = calculatePID(sensorReadings); // calcula o PD
+
+  //
+  int left_motorSpeed  = BASE_MOTOR_SPEED - (int)PDcorrection;
+  int right_motorSpeed = BASE_MOTOR_SPEED + (int)PDcorrection;
 }
-
-
-void setup() {}
-
-
-void loop() { delay(1000); }

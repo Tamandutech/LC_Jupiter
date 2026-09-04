@@ -1,0 +1,43 @@
+#include "Arduino.h"
+#include "env.hpp"
+
+#include "LineControl.hpp"
+
+static float lastError = 0.0f;
+
+float calculateError(int values[NUM_SENSORS]) {
+  // média ponderada
+  float sum         = 0.0f;
+  float weightedSum = 0.0f;
+  float weight      = 0.0f;
+
+  for(int i = 0; i < NUM_SENSORS; i++) {
+    // peso atribuido a cada sensor ( +5.5 a - 5.5 )
+    weight = (i - (NUM_SENSORS - 1) / 2.0f);
+
+    // 0 - branco/ 1000 - preto
+    if(values[i] >
+       200) // Threshold detecção de linha (não sei que valor eh bom)
+    {
+      weightedSum += weight * values[i];
+      sum += values[i];
+    }
+  }
+
+  // positivo - linha a direia
+  // negativo - linha a esquerda
+  if(sum > 0) {
+    lastError = weightedSum / sum;
+    return lastError;
+  }
+}
+
+float calculatePID(int values[NUM_SENSORS]) {
+  float currentError = calculateError(values);
+
+  float derivativeError = currentError - lastError;
+
+  lastError = currentError;
+
+  return (KP * currentError) + (KD * derivativeError);
+}

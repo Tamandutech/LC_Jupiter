@@ -14,7 +14,7 @@ void bluetoothSetup() {
 }
 
 void bluetoothLoop() {
-  NimBLEServer *pServer = NimBLEDevice::getServer();
+  // NimBLEServer *pServer = NimBLEDevice::getServer();
 
   /*
   if(NuSerial.isConnected()) {

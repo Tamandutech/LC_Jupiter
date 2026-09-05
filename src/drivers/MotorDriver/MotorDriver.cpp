@@ -28,7 +28,7 @@ void MotorDriver::pwmOutput(int32_t value) {
   }
 
   pulse_stored = pulse;
-  ledcWrite(pwmPin_stored, pulse_stored);
+  ledcWrite(pwm_channel, pulse_stored);
 }
 
 int32_t MotorDriver::getPulse() { pulse_stored; }

@@ -5,6 +5,13 @@
 
 static float lastError = 0.0f;
 
+int normalize(int sensorReadings, int calMin, int calMax) {
+  if(calMax <= calMin) return 0;
+
+  return (sensorReadings - calMin) * 1000 / (calMax - calMin);
+}
+
+
 float calculateError(int values[NUM_SENSORS]) {
   // média ponderada
   float sum         = 0.0f;

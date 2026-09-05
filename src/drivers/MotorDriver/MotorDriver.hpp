@@ -23,7 +23,7 @@ public:
 private:
   uint8_t directionPin_stored; // guarda o pino da direcao
   uint8_t pwmPin_stored;       // guarda o pino do PWM
-  uint8_t pulse_stored;        // guarda valor atual do PWM
+  int32_t pulse_stored;        // guarda valor atual do PWM
   uint8_t pwm_channel;
 };
 

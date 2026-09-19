@@ -6,8 +6,9 @@
 // Código para controle de um motor;
 
 #define MOTOR_PWM_FREQUENCY (2000) // frequência em Hertz PWM (conferir)
-#define PWM_RESOLUTION      (13)   // resolucao PWM
-#define MAX_PWM_RESOLUTION  (8191) // resolucao maxima do PWM
+#define MOTOR_PWM_BITS \
+  (13) // resolucao PWM (nao usar PWM_RESOLUTION: conflita com o core STM32)
+#define MOTOR_PWM_MAX (8191) // duty maximo (2^13 - 1)
 
 class MotorDriver {
 public:

@@ -11,8 +11,9 @@ MotorDriver::MotorDriver(uint8_t directionPin, uint8_t pwmPin,
 
   pinMode(directionPin_stored, OUTPUT);
 
-  ledcSetup(pwm_channel, MOTOR_PWM_FREQUENCY, PWM_RESOLUTION);
-  ledcAttachPin(pwmPin_stored, pwm_channel);
+  // STM32 Arduino: PWM vem do timer do pino, nao de canais LEDC do ESP32.
+  analogWriteResolution(MOTOR_PWM_BITS);
+  analogWriteFrequency(MOTOR_PWM_FREQUENCY);
 }
 
 void MotorDriver::pwmOutput(int32_t value) {
@@ -27,8 +28,12 @@ void MotorDriver::pwmOutput(int32_t value) {
     pulse = -pulse;
   }
 
+  if(pulse > MOTOR_PWM_MAX) {
+    pulse = MOTOR_PWM_MAX;
+  }
+
   pulse_stored = pulse;
-  ledcWrite(pwm_channel, pulse_stored);
+  analogWrite(pwmPin_stored, pulse_stored);
 }
 
-int32_t MotorDriver::getPulse() { pulse_stored; }
+int32_t MotorDriver::getPulse() { return pulse_stored; }

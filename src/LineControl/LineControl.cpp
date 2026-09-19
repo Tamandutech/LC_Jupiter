@@ -35,8 +35,9 @@ float calculateError(int values[NUM_SENSORS]) {
   // negativo - linha a esquerda
   if(sum > 0) {
     lastError = weightedSum / sum;
-    return lastError;
   }
+
+  return lastError;
 }
 
 float calculatePID(int values[NUM_SENSORS]) {

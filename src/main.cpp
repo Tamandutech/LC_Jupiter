@@ -16,7 +16,7 @@ MotorDriver motorLeft(GPIO_DIRECTION_A, GPIO_PWM_A, PWM_CHANNEL_MOTOR_A);
 MotorDriver motorRight(GPIO_DIRECTION_B, GPIO_PWM_B, PWM_CHANNEL_MOTOR_B);
 Multiplexer multiplexer;
 
-enum class RobotState { STOPPED, RUNNING };
+enum class RobotState { STOPPED, RUNNING, CHANGE_PD };
 RobotState robotState = RobotState::STOPPED;
 
 // armazena leitura dos sensores[]
@@ -45,32 +45,31 @@ void setup() {
   Serial.println("Setup finalizado.");
 }
 
-void changePID(int values[NUM_SENSORS]) {}
 
-// void calibration() {
+void calibration() {
 
-//   for(int i = 0; i < NUM_SENSORS; i++) {
-//     calibrationMin[i] =
-//         4095; // Comeca o min com o maior valor possivel para ir diminuindo
-//     calibrationMax[i] = 0; // O contrario do min
-//   }
+  for(int i = 0; i < NUM_SENSORS; i++) {
+    calibrationMin[i] =
+        4095; // Comeca o min com o maior valor possivel para ir diminuindo
+    calibrationMax[i] = 0; // O contrario do min
+  }
 
-//   for(int j = 0; j < NUM_CALIBRATION; j++) {
+  for(int j = 0; j < NUM_CALIBRATION; j++) {
 
-//     multiplexer.readSensors(sensorReadings);
+    multiplexer.readSensors(sensorReadings);
 
-//     for(int i = 0; i < NUM_SENSORS; i++) {
-//       if(sensorReadings[i] < calibrationMin[i]) {
-//         calibrationMin[i] = sensorReadings[i];
-//       }
-//       if(sensorReadings[i] > calibrationMax[i]) {
-//         calibrationMax[i] = sensorReadings[i];
-//       }
-//     }
+    for(int i = 0; i < NUM_SENSORS; i++) {
+      if(sensorReadings[i] < calibrationMin[i]) {
+        calibrationMin[i] = sensorReadings[i];
+      }
+      if(sensorReadings[i] > calibrationMax[i]) {
+        calibrationMax[i] = sensorReadings[i];
+      }
+    }
 
-//     delay(100);
-//   }
-// }
+    delay(100);
+  }
+}
 
 
 // faz o motor funfar
@@ -105,8 +104,19 @@ void loop() {
 
         NuSerial.println("Para");
       } else if(serialMonitorChar == '2') {
-        // calibration();
+        calibration();
         NuSerial.println("Calibração Completa");
+      }
+
+      else if(serialMonitorChar == '3') {
+
+        NuSerial.println("Novo KP: ");
+        float new_KP = NuSerial.read();
+
+        NuSerial.println("Novo KD: ");
+        float new_KD = NuSerial.read();
+
+        robotState = RobotState::CHANGE_PD;
       }
     }
   }
@@ -114,24 +124,41 @@ void loop() {
   if(robotState == RobotState::RUNNING) {
     multiplexer.readSensors(sensorReadings); // le todos os 12 sensores;
 
-    // for(int k = 0; k < NUM_SENSORS; k++)
-    //   normalizedReadings[k] =
-    //       normalize(sensorReadings[k], calibrationMin[k], calibrationMax[k]);
+    for(int k = 0; k < NUM_SENSORS; k++)
+      normalizedReadings[k] =
+          normalize(sensorReadings[k], calibrationMin[k], calibrationMax[k]);
 
-    for(int i = 0; i < NUM_SENSORS; i++) {
-      Serial.print("i: ");
-      Serial.print(
-          normalize(sensorReadings[i], calibrationMin[i], calibrationMax[i]));
-      Serial.print("; ");
-    }
-    Serial.println();
+    // for(int i = 0; i < NUM_SENSORS; i++) {
+    //   Serial.print("i: ");
+    //   Serial.print(sensorReadings[i]);
+    //   Serial.print("; ");
+    // }
+    // Serial.println();
+    // for(int i = 0; i < NUM_SENSORS; i++) {
+    //   Serial.print("i: ");
+    //   Serial.print(
+    //       normalize(sensorReadings[i], calibrationMin[i],
+    //       calibrationMax[i]));
+    //   Serial.print("; ");
+    // }
+    // Serial.println();
+    // delay(1000);
 
-    // NuSerial.println(calibrationMin[0]);
-    // NuSerial.println(calibrationMax[0]);
-    // normalizedReadings[0] =
-    //     normalize(sensorReadings[0], calibrationMin[0], calibrationMax[0]);
 
-    //   float PDcorrection = calculatePID(normalizedReadings); // calcula o PD
-    //   applyMotorSpeeds(PDcorrection);
+    float PDcorrection =
+        calculatePID(normalizedReadings, KP, KD); // calcula o PD
+    applyMotorSpeeds(PDcorrection);
   }
+}
+
+if(RobotState = RobotState::CHANGE_PD) {
+  multiplexer.readSensors(sensorReadings); // le todos os 12 sensores;
+
+  for(int k = 0; k < NUM_SENSORS; k++)
+    normalizedReadings[k] =
+        normalize(sensorReadings[k], calibrationMin[k], calibrationMax[k]);
+
+  float PDcorrection =
+      calculatePID(normalizedReadings, new_KP, new_KD); // calcula o PD
+  applyMotorSpeeds(PDcorrection);
 }

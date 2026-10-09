@@ -9,6 +9,6 @@
 int normalize(int sensorReadings, int calMin, int calMax);
 
 float calculateError(int values[NUM_SENSORS]);
-float calculatePID(int values[NUM_SENSORS]);
+float calculatePID(int values[NUM_SENSORS], float kp, float kd);
 
 #endif

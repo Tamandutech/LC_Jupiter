@@ -12,7 +12,7 @@
 // número de vezes que o sensor calibra
 #define NUM_CALIBRATION (60)
 
-#define BASE_MOTOR_SPEED (2000) // velocidade base dos motores (0 - 8191)
+#define BASE_MOTOR_SPEED (1000) // velocidade base dos motores (0 - 8191)
 
 #define PWM_CHANNEL_MOTOR_A (0)
 #define PWM_CHANNEL_MOTOR_B (1)
